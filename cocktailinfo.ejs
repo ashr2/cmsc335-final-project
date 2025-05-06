@@ -14,11 +14,15 @@
 			<h1>
 				<%= cocktail['strDrink'] %>
 			</h1>
+			<h2> Ingredients </h2>
 			<ul>
 				<% Object.keys(ingredients).forEach(curr => { %>
-				  <li><%= ingredients[curr]%> of <%= curr %></li>
+					<li>
+						<%= ingredients[curr] ? ingredients[curr] + ' of ' + curr : curr %>
+					</li>
 				<% }) %>
 			  </ul>
+			<h2> Instructions </h2>
 			<p>
 				<%= cocktail['strInstructions'] %>
 			</p>

@@ -41,7 +41,7 @@ body {
 
 .cocktail-container {
   display: flex;
-  align-items: center; /* ✅ this vertically centers the image and text */
+  align-items: center;
   gap: 30px;
   max-width: 80%;
   margin: 50px auto;
@@ -60,4 +60,8 @@ body {
 
 .cocktail-info {
   flex: 1;
+}
+
+form {
+  margin: 20px;
 }

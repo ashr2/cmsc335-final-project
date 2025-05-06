@@ -1,0 +1,20 @@
+<!doctype html>
+<html>
+<head>
+    <title>Page Title</title>
+    <link rel="stylesheet" href="form.css"/>
+</head>
+    <body>
+        <h1> Cocktail Website </h1>
+        <form id="form" action="process-cocktail-search" method="GET">
+            <% for (let i = 1; i <= 3; i++) { %>
+                <label> Ingredient <%= i >= 2 ?  i + " (optional)" : i %> :</label>
+                <select class="ingredientInput" name="ingredient<%= i %>">
+                    <%- ingredientsHTML %>
+                </select>
+                <br/>
+              <% } %> 
+              <button type="submit"> Submit </button>
+        </form>
+    </body>
+</html>

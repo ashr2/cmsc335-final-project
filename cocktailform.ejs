@@ -10,6 +10,7 @@
             <% for (let i = 1; i <= 3; i++) { %>
                 <label> Ingredient <%= i >= 2 ?  i + " (optional)" : i %> :</label>
                 <select class="ingredientInput" name="ingredient<%= i %>">
+                    <option value="None" default>(None)</option>
                     <%- ingredientsHTML %>
                 </select>
                 <br/>

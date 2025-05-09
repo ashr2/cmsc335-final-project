@@ -82,28 +82,34 @@ app.get('/process-cocktail-search', async (req, res) => {
     const drinkMap = {};
     const idSets = [];
     for(let i = 0; i < ingredients.length; i++) {
-        const URL = `https://www.thecocktaildb.com/api/json/v1/1/filter.php?i=${ingredients[i]}`;
-        const response = await fetch(URL);
-        const data = await response.json();
-        const drinks = data["drinks"] || [];
-        const idSet = new Set();
-        for(let j = 0; j < drinks.length; j++) {
-            idSet.add(drinks[j]["idDrink"]);
-            drinkMap[drinks[j]["idDrink"]] = drinks[j];
+        if(ingredients[i] !== "None") {
+            const URL = `https://www.thecocktaildb.com/api/json/v1/1/filter.php?i=${ingredients[i]}`;
+            const response = await fetch(URL);
+            const data = await response.json();
+            const drinks = data["drinks"] || [];
+            const idSet = new Set();
+            for(let j = 0; j < drinks.length; j++) {
+                idSet.add(drinks[j]["idDrink"]);
+                drinkMap[drinks[j]["idDrink"]] = drinks[j];
+            }
+            idSets.push(idSet);
         }
-        idSets.push(idSet);
     }
-    const commonIds = idSets.reduce((acc, currSet) =>
-        new Set([...acc].filter(id => currSet.has(id)))
-    );
-    const filteredDrinks = [...commonIds].map(id => drinkMap[id]);
-    console.log(filteredDrinks);
-    const header = `<div class="grid-container">`;
-    const drinks = filteredDrinks.reduce((acc, drink) => {
-        return acc + `<a href="cocktail/${drink["idDrink"]}"> <div class="card"> <img src="${drink.strDrinkThumb+"/small"}" /> 
-                <p> ${drink.strDrink}</p> </div> </a>`;
-    }, "");
-    const footer = "</div>";
-    const drinkHtml = header + drinks + footer;
-    res.render('viewcocktails',{drinkHtml: drinkHtml})
+    if(idSets.length > 0) {
+        const commonIds = idSets.reduce((acc, currSet) =>
+            new Set([...acc].filter(id => currSet.has(id)))
+        );
+        const filteredDrinks = [...commonIds].map(id => drinkMap[id]);
+        console.log(filteredDrinks);
+        const header = `<div class="grid-container">`;
+        const drinks = filteredDrinks.reduce((acc, drink) => {
+            return acc + `<a href="cocktail/${drink["idDrink"]}"> <div class="card"> <img src="${drink.strDrinkThumb+"/small"}" /> 
+                    <p> ${drink.strDrink}</p> </div> </a>`;
+        }, "");
+        const footer = "</div>";
+        const drinkHtml = header + drinks + footer;
+        res.render('viewcocktails',{drinkHtml: drinkHtml})
+    } else {
+        res.redirect('/view-cocktails');
+    }
 });

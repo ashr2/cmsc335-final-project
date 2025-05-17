@@ -1,0 +1,36 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+	<meta charset="utf-8" />
+	<title><%= cocktail['strDrink'] %></title>
+	<link rel="stylesheet" href="/style.css">
+</head>
+
+<body>
+	<div class="cocktail-container">
+		<img src="<%= cocktail['strDrinkThumb'] %>">
+		<div class="cocktail-info">
+			<h1>
+				<%= cocktail['strDrink'] %>
+			</h1>
+			<h2> Ingredients </h2>
+			<ul>
+				<% Object.keys(ingredients).forEach(curr => { %>
+					<li>
+						<%= ingredients[curr] ? ingredients[curr] + ' of ' + curr : curr %>
+					</li>
+				<% }) %>
+			  </ul>
+			<h2> Instructions </h2>
+			<p>
+				<%= cocktail['strInstructions'] %>
+			</p>
+		</div>
+	</div>
+	<br/>
+	<a href="/"><u>HOME</u></a>
+	<br/>
+</body>
+
+</html>

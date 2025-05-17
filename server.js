@@ -67,7 +67,7 @@ app.get('/view-cocktails', async (req, res) => {
     const URL = "https://www.thecocktaildb.com/api/json/v1/1/filter.php?c=Cocktail";
     const response = await fetch(URL);
     const data = await response.json();
-    console.log(data['drinks']);
+    //console.log(data['drinks']);
     const header = `<div class="grid-container">`;
     const drinks = data['drinks'].reduce((acc, drink) => {
         return acc + `<a href="cocktail/${drink.idDrink}"> <div class="card"> <img src="${drink.strDrinkThumb+"/small"}" /> 
@@ -200,24 +200,20 @@ app.post("/remove-saved", async (req, res) => {
 app.get("/search-saved", async (req, res) => {
     let ingredients = await getIngredients();
     const drinkMap = {};
-    const idSets = [];
+    const idSet = new Set();
     for(let i = 0; i < ingredients.length; i++) {
         const URL = `https://www.thecocktaildb.com/api/json/v1/1/filter.php?i=${ingredients[i].name}`;
         const response = await fetch(URL);
         const data = await response.json();
         const drinks = data["drinks"] || [];
-        const idSet = new Set();
+
         for(let j = 0; j < drinks.length; j++) {
             idSet.add(drinks[j]["idDrink"]);
             drinkMap[drinks[j]["idDrink"]] = drinks[j];
         }
-        idSets.push(idSet);
     }
-    if(idSets.length > 0) {
-        const commonIds = idSets.reduce((acc, currSet) =>
-            new Set([...acc].filter(id => currSet.has(id)))
-        );
-        const filteredDrinks = [...commonIds].map(id => drinkMap[id]);
+
+        const filteredDrinks = [...idSet].map(id => drinkMap[id]);
         console.log(filteredDrinks);
         const header = `<div class="grid-container">`;
         const drinks = filteredDrinks.reduce((acc, drink) => {
@@ -227,9 +223,7 @@ app.get("/search-saved", async (req, res) => {
         const footer = "</div>";
         const drinkHtml = header + drinks + footer;
         res.render('viewcocktails',{drinkHtml: drinkHtml})
-    } else {
-        res.redirect('/view-cocktails');
-    }
+
 });
 
 process.stdout.write("Stop to shutdown the server: ");
